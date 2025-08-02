@@ -1,0 +1,27 @@
+api:
+    version: 0.0.1
+
+server:
+    port: 8080
+
+spring:
+    jpa:
+        hibernate:
+            ddl-auto: create-drop
+
+        show-sql: true
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
+    datasource:
+#        initialize: false # turn off dataSource auto config
+        url: jdbc:postgresql://localhost:5432/demo?currentSchema=demo
+        username: suitcase
+        password: suitcase
+        driver-class-name: org.postgresql.Driver
+    application:
+        name: demo
+
+security:
+    basic:
+        enabled: false # turn off basic security auto config
+
+#debug: true
