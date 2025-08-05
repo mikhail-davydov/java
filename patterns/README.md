@@ -25,7 +25,7 @@
 - [Command](./behavioral/command/README.md), команда для инкапсуляции запросов
 - [Template Method](./behavioral/template/README.md), шаблонный метод для алгоритмов
 - [State](./behavioral/state/README.md), изменение поведения в зависимости от состояния
-- Visitor, посетитель для операций над объектами
+- [Visitor](./behavioral/visitor/README.md), посетитель для операций над объектами
 - Mediator, посредник для коммуникации объектов
 - Iterator, последовательный доступ к элементам
 - Memento, сохранение состояния объекта
