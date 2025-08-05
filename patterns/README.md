@@ -24,7 +24,7 @@
 - [Strategy](./behavioral/strategy/README.md), стратегия для выбора алгоритмов
 - [Command](./behavioral/command/README.md), команда для инкапсуляции запросов
 - [Template Method](./behavioral/template/README.md), шаблонный метод для алгоритмов
-- State, изменение поведения в зависимости от состояния
+- [State](./behavioral/state/README.md), изменение поведения в зависимости от состояния
 - Visitor, посетитель для операций над объектами
 - Mediator, посредник для коммуникации объектов
 - Iterator, последовательный доступ к элементам
