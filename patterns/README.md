@@ -29,7 +29,7 @@
 - [Mediator](./behavioral/mediator/README.md), посредник для коммуникации объектов
 - [Iterator](./behavioral/iterator/README.md), последовательный доступ к элементам
 - [Memento](./behavioral/memento/README.md), сохранение состояния объекта
-- Chain of Responsibility, цепочка обработчиков запросов
+- [Chain of Responsibility](./behavioral/chain/README.md), цепочка обработчиков запросов
 
 ## Когда использовать:
 - Для решения типовых задач с проверенными решениями
