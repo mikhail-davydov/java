@@ -27,7 +27,7 @@
 - [State](./behavioral/state/README.md), изменение поведения в зависимости от состояния
 - [Visitor](./behavioral/visitor/README.md), посетитель для операций над объектами
 - [Mediator](./behavioral/mediator/README.md), посредник для коммуникации объектов
-- Iterator, последовательный доступ к элементам
+- [Iterator](./behavioral/iterator/README.md), последовательный доступ к элементам
 - Memento, сохранение состояния объекта
 - Chain of Responsibility, цепочка обработчиков запросов
 
