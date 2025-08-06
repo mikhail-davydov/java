@@ -28,7 +28,7 @@
 - [Visitor](./behavioral/visitor/README.md), посетитель для операций над объектами
 - [Mediator](./behavioral/mediator/README.md), посредник для коммуникации объектов
 - [Iterator](./behavioral/iterator/README.md), последовательный доступ к элементам
-- Memento, сохранение состояния объекта
+- [Memento](./behavioral/memento/README.md), сохранение состояния объекта
 - Chain of Responsibility, цепочка обработчиков запросов
 
 ## Когда использовать:
