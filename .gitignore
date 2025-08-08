@@ -35,5 +35,8 @@ build/
 ### Fleet ###
 .fleet/
 
+### GigaIDE ###
+.gigaide/
+
 ### Custom Private settings ###
 .private/
