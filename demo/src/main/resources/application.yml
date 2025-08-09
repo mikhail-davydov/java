@@ -13,9 +13,9 @@ spring:
         database-platform: org.hibernate.dialect.PostgreSQLDialect
     datasource:
 #        initialize: false # turn off dataSource auto config
-        url: jdbc:postgresql://localhost:5432/demo?currentSchema=demo
-        username: suitcase
-        password: suitcase
+        url: jdbc:postgresql://localhost:5432/local?currentSchema=demo
+        username: demo
+        password: demo
         driver-class-name: org.postgresql.Driver
     application:
         name: demo

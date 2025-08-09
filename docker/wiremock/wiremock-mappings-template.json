@@ -1,0 +1,68 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "GET",
+        "urlPath": "/currencies/symbol",
+        "queryParameters": {
+          "numericCode": {
+            "and": [
+              {
+                "matches": "^\\d{3}$"
+              },
+              {
+                "doesNotMatch": "^978$"
+              },
+              {
+                "doesNotMatch": "^643$"
+              }
+            ]
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "$",
+        "transformers": [
+          "response-template"
+        ]
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "urlPath": "/currencies/symbol",
+        "queryParameters": {
+          "numericCode": {
+            "equalTo": "978"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "€",
+        "transformers": [
+          "response-template"
+        ]
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "urlPath": "/currencies/symbol",
+        "queryParameters": {
+          "numericCode": {
+            "equalTo": "643"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": "₽",
+        "transformers": [
+          "response-template"
+        ]
+      }
+    }
+  ]
+}
