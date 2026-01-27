@@ -6,7 +6,7 @@ services:
     ports:
       - "18082:80"
     environment:
-      - "PGADMIN_DEFAULT_EMAIL=user@email.local"
+      - "PGADMIN_DEFAULT_EMAIL=user@local.email"
       - "PGADMIN_DEFAULT_PASSWORD=local"
     networks:
       - local
