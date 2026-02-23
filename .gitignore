@@ -38,5 +38,15 @@ build/
 ### GigaIDE ###
 .gigaide/
 
+### nodejs
+/docker/nodejs/package-lock.json
+/docker/nodejs/node_modules/
+
+### postgres
+/docker/postgres/data/
+
+### mongodb
+/docker/mongodb/data/
+
 ### Custom Private settings ###
 .private/

@@ -1,5 +1,17 @@
 services:
 
+  nodejs:
+    container_name: nodejs
+    image: node:lts
+    working_dir: /app
+    volumes:
+      - ./nodejs:/app
+    command: sh -c "npm init -y && npm install && node index.js"
+    ports:
+      - "3000:3000"
+    networks:
+      - local
+
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4:latest
@@ -24,7 +36,8 @@ services:
     networks:
       - local
     volumes:
-      - ./db/init.sql:/docker-entrypoint-initdb.d/db.sql
+      - ./postgres/data:/var/lib/postgresql
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/db.sql
 
   keycloak:
     container_name: keycloak
@@ -62,6 +75,20 @@ services:
       - "--requirepass redis"
     networks:
       - local
+
+  mongodb:
+    container_name: mongodb
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      - "MONGO_INITDB_ROOT_USERNAME=local"
+      - "MONGO_INITDB_ROOT_PASSWORD=local"
+      - "MONGO_INITDB_DATABASE=local"
+    networks:
+      - local
+    volumes:
+      - ./mongodb/data:/data/db
 
   kafka-ui:
     container_name: kafka_ui
