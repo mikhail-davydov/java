@@ -1,5 +1,15 @@
 services:
 
+  ollama:
+    container_name: ollama
+    image: alpine/ollama:latest
+    volumes:
+      - ./ollama:/root/.ollama
+    ports:
+      - "11434:11434"
+    networks:
+      - local
+
   nodejs:
     container_name: nodejs
     image: node:lts
@@ -125,6 +135,20 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       KAFKA_NUM_PARTITIONS: 3
+
+  jupyter:
+    container_name: jupyter
+    image: jupyter/scipy-notebook:latest
+    user: jovyan
+    working_dir: /home/jovyan/work
+    ports:
+      - "18888:8888"
+    volumes:
+      - ./jupyter/datasets:/datasets
+      - ./jupyter/notebooks:/home/jovyan/work
+    command: ["jupyter", "notebook", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''", "--ip=0.0.0.0", "--no-browser"]
+    networks:
+      - local
 
   wiremock:
     container_name: wiremock

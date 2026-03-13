@@ -48,5 +48,11 @@ build/
 ### mongodb
 /docker/mongodb/data/
 
+### ollama
+/docker/ollama/
+
+### jupyter
+/docker/jupyter/
+
 ### Custom Private settings ###
 .private/
