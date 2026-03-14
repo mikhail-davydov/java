@@ -159,6 +159,17 @@ services:
       - ./wiremock:/home/wiremock/mappings
     entrypoint: ["/docker-entrypoint.sh", "--global-response-templating", "--disable-gzip", "--verbose"]
 
+  qdrant:
+    container_name: qdrant
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - ./qdrant/data:/qdrant/storage
+    networks:
+      - local
+
 networks:
   local:
     name: local

@@ -86,6 +86,7 @@ A containerized local development infrastructure with pre-configured services fo
 | Jupyter | 18888 | Data science notebook |
 | pgAdmin | 18082 | PostgreSQL administration |
 | Wiremock | 18081 | API mocking service |
+| Qdrant | 6333 | Vector database for AI applications |
 
 **Pre-configured Users:**
 - PostgreSQL: demo/demo, keycloak/keycloak
@@ -181,6 +182,8 @@ ls -la
 │   ├── redis/                   # Redis configuration
 │   ├── keycloak/                # Keycloak configuration
 │   ├── kafka/                   # Kafka configuration
+│   ├── qdrant/                  # Qdrant vector database
+│   ├── ollama/                  # Ollama LLM execution
 │   ├── nodejs/                  # Node.js samples
 │   ├── jupyter/                 # Jupyter notebooks
 │   ├── wiremock/                # API mocks
@@ -216,10 +219,10 @@ ls -la
 
 - **Frameworks**: Spring Boot 3.5.0
 - **Languages**: Java 17, JavaScript (Node.js)
-- **Databases**: PostgreSQL, MongoDB, Redis
+- **Databases**: PostgreSQL, MongoDB, Redis, Qdrant
 - **Messaging**: Apache Kafka
 - **Security**: Keycloak (OAuth2/OIDC)
-- **ML/AI**: Ollama (Local LLM)
+- **ML/AI**: Ollama (Local LLM), Qdrant (Vector Database)
 - **Data Science**: Jupyter
 - **Testing**: WireMock
 - **Build Tools**: Apache Maven

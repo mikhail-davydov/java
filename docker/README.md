@@ -10,6 +10,7 @@
 - ollama
 - pgadmin
 - postgres
+- qdrant
 - redis
 - wiremock
 
@@ -110,3 +111,17 @@ Wiremock - инструмент для создания API заглушек.
 - Том: ./wiremock:/home/wiremock/mappings
 - При создании image копируются заглушки из папки [`wiremock`](./wiremock/wiremock-mappings-template.json)
 - Основные заглушки добавляются в отдельный файл `<service-name>.json`
+
+## Qdrant
+
+Векторная база данных для AI-приложений и семантического поиска.
+- REST API: http://localhost:6333
+- gRPC: localhost:6334
+- Том: ./qdrant/data:/qdrant/storage
+- [Документация](https://qdrant.tech/documentation/)
+
+Qdrant используется для:
+- Векторного поиска и семантического поиска
+- Хранения эмбеддингов (embeddings)
+- similarity search в AI/ML приложениях
+- RAG (Retrieval-Augmented Generation) систем
