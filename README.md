@@ -87,9 +87,10 @@ A containerized local development infrastructure with pre-configured services fo
 | pgAdmin | 18082 | PostgreSQL administration |
 | Wiremock | 18081 | API mocking service |
 | Qdrant | 6333 | Vector database for AI applications |
+| n8n | 15678 | Low-code workflow automation platform |
 
 **Pre-configured Users:**
-- PostgreSQL: demo/demo, keycloak/keycloak
+- PostgreSQL: demo/demo, keycloak/keycloak, n8n/n8n
 - Keycloak: admin/admin
 - pgAdmin: user@local.email/local
 
@@ -187,6 +188,7 @@ ls -la
 │   ├── nodejs/                  # Node.js samples
 │   ├── jupyter/                 # Jupyter notebooks
 │   ├── wiremock/                # API mocks
+│   ├── n8n/                     # n8n workflow automation
 │   └── README.md                # Environment documentation
 │
 └── README.md                      # This file
@@ -225,6 +227,7 @@ ls -la
 - **ML/AI**: Ollama (Local LLM), Qdrant (Vector Database)
 - **Data Science**: Jupyter
 - **Testing**: WireMock
+- **Automation**: n8n (Workflow automation)
 - **Build Tools**: Apache Maven
 
 ## License

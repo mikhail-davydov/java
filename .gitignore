@@ -54,5 +54,11 @@ build/
 ### jupyter
 /docker/jupyter/
 
+### qdrant
+/docker/qdrant/
+
+### n8n
+/docker/n8n
+
 ### Custom Private settings ###
 .private/

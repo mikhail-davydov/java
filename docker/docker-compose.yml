@@ -28,8 +28,8 @@ services:
     ports:
       - "18082:80"
     environment:
-      - "PGADMIN_DEFAULT_EMAIL=user@local.email"
-      - "PGADMIN_DEFAULT_PASSWORD=local"
+      PGADMIN_DEFAULT_EMAIL: user@local.email
+      PGADMIN_DEFAULT_PASSWORD: local
     networks:
       - local
 
@@ -40,9 +40,9 @@ services:
     ports:
       - "15432:5432"
     environment:
-      - "POSTGRES_USER=local"
-      - "POSTGRES_PASSWORD=local"
-      - "POSTGRES_DB=local"
+      POSTGRES_USER: local
+      POSTGRES_PASSWORD: local
+      POSTGRES_DB: local
     networks:
       - local
     volumes:
@@ -92,9 +92,9 @@ services:
     ports:
       - "27017:27017"
     environment:
-      - "MONGO_INITDB_ROOT_USERNAME=local"
-      - "MONGO_INITDB_ROOT_PASSWORD=local"
-      - "MONGO_INITDB_DATABASE=local"
+      MONGO_INITDB_ROOT_USERNAME: local
+      MONGO_INITDB_ROOT_PASSWORD: local
+      MONGO_INITDB_DATABASE: local
     networks:
       - local
     volumes:
@@ -169,6 +169,24 @@ services:
       - ./qdrant/data:/qdrant/storage
     networks:
       - local
+
+  n8n:
+    container_name: n8n
+    image: n8nio/n8n:latest
+    ports:
+      - "15678:5678"
+    networks:
+      - local
+    volumes:
+      - ./n8n/data:/home/node/.n8n
+    environment:
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: local
+      DB_POSTGRESDB_USER: n8n
+      DB_POSTGRESDB_PASSWORD: n8n
+    depends_on:
+      - postgres
 
 networks:
   local:

@@ -6,6 +6,7 @@
 - kafka-ui
 - keycloak
 - mongodb
+- n8n
 - nodejs
 - ollama
 - pgadmin
@@ -31,6 +32,7 @@
 Дополнительно создает пользователей и схемы из [скрипта инициализации](postgres/init.sql):
 - demo (demo/demo)
 - keycloak (keycloak/keycloak)
+- n8n (n8n/n8n)
 
 ## mongodb
 
@@ -125,3 +127,19 @@ Qdrant используется для:
 - Хранения эмбеддингов (embeddings)
 - similarity search в AI/ML приложениях
 - RAG (Retrieval-Augmented Generation) систем
+
+## n8n
+
+Платформа автоматизации workflow с низким кодом (low-code).
+- http://localhost:15678
+- Порт: 15678 (внешний), 5678 (внутренний)
+- Зависит от: postgres
+- База данных: n8n/n8n (использует БД local)
+- Том: ./n8n/data:/home/node/.n8n
+- [Документация](https://docs.n8n.io/)
+
+n8n используется для:
+- Автоматизации бизнес-процессов
+- Интеграции различных сервисов и API
+- Создания workflow без программирования
+- Оркестрации данных между системами
