@@ -29,7 +29,7 @@
 - Том: ./postgres/data:/var/lib/postgresql
 - init.sql: ./postgres/init.sql
 
-Дополнительно создает пользователей и схемы из [скрипта инициализации](postgres/init.sql):
+Дополнительно создает пользователей и схемы из [скрипта инициализации](common/postgres/init.sql):
 - demo (demo/demo)
 - keycloak (keycloak/keycloak)
 - n8n (n8n/n8n)
@@ -111,7 +111,7 @@ Wiremock - инструмент для создания API заглушек.
 - http://localhost:18081
 - [Документация](https://wiremock.org/docs/)
 - Том: ./wiremock:/home/wiremock/mappings
-- При создании image копируются заглушки из папки [`wiremock`](./wiremock/wiremock-mappings-template.json)
+- При создании image копируются заглушки из папки [`wiremock`](common/wiremock/wiremock-mappings-template.json)
 - Основные заглушки добавляются в отдельный файл `<service-name>.json`
 
 ## Qdrant

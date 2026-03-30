@@ -39,26 +39,30 @@ build/
 .gigaide/
 
 ### nodejs
-/docker/nodejs/package-lock.json
-/docker/nodejs/node_modules/
+/docker/**/nodejs/package-lock.json
+/docker/**/nodejs/node_modules/
 
 ### postgres
-/docker/postgres/data/
+/docker/**/postgres/data/
 
 ### mongodb
-/docker/mongodb/data/
+/docker/**/mongodb/data/
 
 ### ollama
-/docker/ollama/
+/docker/**/ollama/
 
 ### jupyter
-/docker/jupyter/
+/docker/**/jupyter/
 
 ### qdrant
-/docker/qdrant/
+/docker/**/qdrant/
 
 ### n8n
-/docker/n8n
+/docker/**/n8n
+
+### n8n-stack
+/docker/n8n-stack/data/
 
 ### Custom Private settings ###
 .private/
+/**/.env

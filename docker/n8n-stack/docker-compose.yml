@@ -1,0 +1,350 @@
+# Enhanced docker-compose.yml for n8n with Worker Architecture
+# Version: 2.1 - Simplified (web + webhook merged)
+#
+# Архитектура стека:
+#   - n8n: Web UI, API и webhook (все в одном сервисе)
+#   - n8n-worker: Обработка очередей и выполнение задач
+#   - Ollama: Локальные LLM модели
+#   - ollama-manager: Управление моделями (загрузка, обновление)
+#   - PostgreSQL: База данных
+#   - Redis: Кеш и очереди
+#
+# Usage:
+#   1. Copy .env.example to .env and update with your values
+#   2. Run: docker-compose up -d
+#   3. Access n8n at http://localhost:5678
+
+services:
+  # =============================================================================
+  # PostgreSQL - Primary database for n8n
+  # =============================================================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: n8n-postgres
+    restart: unless-stopped
+    
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d:ro
+    
+    networks:
+      - n8n-network
+    
+    expose:
+      - 5432
+    
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+
+    security_opt:
+      - no-new-privileges:true
+
+  # =============================================================================
+  # Redis - Cache and queue management
+  # =============================================================================
+  redis:
+    image: redis:latest
+    container_name: n8n-redis
+    restart: unless-stopped
+    
+    command: >
+      redis-server
+      --requirepass ${REDIS_PASSWORD}
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+      --appendonly yes
+      --save 900 1
+      --save 300 10
+      --save 60 10000
+    
+    volumes:
+      - ./data/redis:/data
+    
+    networks:
+      - n8n-network
+    
+    expose:
+      - 6379
+    
+    security_opt:
+      - no-new-privileges:true
+    
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  # =============================================================================
+  # Ollama - Local LLM models
+  # =============================================================================
+  ollama:
+    image: ollama/ollama:latest
+    container_name: n8n-ollama
+    restart: unless-stopped
+    
+    environment:
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_MODELS: /root/.ollama/models
+      OLLAMA_CONTEXT_WINDOW: 8192
+      OLLAMA_MAX_LOADED_MODELS: 2
+    
+    volumes:
+      - ./data/ollama:/root/.ollama
+    
+    networks:
+      - n8n-network
+    
+    ports:
+      - "${OLLAMA_PORT}:11434"
+    
+    # GPU support - uncomment if you have NVIDIA GPU
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+    
+    security_opt:
+      - no-new-privileges:true
+    
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 2G
+
+  # =============================================================================
+  # Ollama Manager - Model management service
+  # Uses external script: scripts/ollama-manager.sh
+  # =============================================================================
+  ollama-manager:
+    image: alpine:3.19
+    container_name: n8n-ollama-manager
+    restart: unless-stopped
+    
+    # Wait for Ollama to be ready
+    depends_on:
+      ollama:
+        condition: service_started
+    
+    environment:
+      # Model to auto-load (from .env)
+      OLLAMA_DEFAULT_MODEL: ${OLLAMA_DEFAULT_MODEL}
+    
+    # Use external script from ./scripts directory
+    entrypoint: ["/bin/sh", "/scripts/ollama-manager.sh"]
+    
+    networks:
+      - n8n-network
+    
+    volumes:
+      # Scripts for model management
+      - ./scripts:/scripts:ro
+      # Access to Ollama models
+      - ./data/ollama:/root/.ollama:ro
+
+  # =============================================================================
+  # n8n - Web UI, API and Webhooks (main instance)
+  # =============================================================================
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    restart: unless-stopped
+    
+    depends_on:
+      postgres:
+        condition: service_started
+      redis:
+        condition: service_started
+    
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:5678/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    environment:
+      # n8n Configuration - Main instance (handles UI + webhooks, sends to queue)
+      N8N_MODE: "queue"
+      N8N_HOST: ${N8N_HOST}
+      N8N_PORT: 5678
+      N8N_PROTOCOL: ${N8N_PROTOCOL}
+      
+      # n8n Authentication
+      N8N_BASIC_AUTH_ACTIVE: "true"
+      N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER}
+      N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD}
+      
+      # Database Configuration (PostgreSQL)
+      EXECUTIONS_DATA_SAVE_ON_ERROR: all
+      EXECUTIONS_DATA_SAVE_ON_SUCCESS: all
+      EXECUTIONS_DATA_SAVE_ON_PROGRESS: true
+      EXECUTIONS_DATA_SAVE_MANUAL_EXECUTIONS: true
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: ${POSTGRES_DB}
+      DB_POSTGRESDB_USER: ${POSTGRES_USER}
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD}
+      
+      # Queue Configuration (Redis)
+      QUEUE_BULL_REDIS_HOST: redis
+      QUEUE_BULL_REDIS_PORT: 6379
+      QUEUE_BULL_REDIS_PASSWORD: ${REDIS_PASSWORD}
+      QUEUE_BULL_REDIS_DB: 0
+      QUEUE_HEALTH_CHECK_ACTIVE: "true"
+      
+      # n8n General Settings
+      N8N_LOG_LEVEL: ${N8N_LOG_LEVEL}
+      N8N_LOG_OUTPUT: console
+      N8N_DIAGNOSTICS_ENABLED: "false"
+      
+      # Webhook Configuration - Web handles webhooks
+      N8N_EDITOR_BASE_URL: ${N8N_EDITOR_BASE_URL}
+      WEBHOOK_URL: ${N8N_WEBHOOK_URL}
+
+      # Process modes - This is the web/process instance
+      EXECUTIONS_PROCESS: "main"
+      EXECUTIONS_TIMEOUT: 300
+      EXECUTIONS_TIMEOUT_MAX: 600
+      
+      # Security
+      N8N_RESTRICT_FILE_ACCESS_TO: ${N8N_RESTRICT_FILE_ACCESS_TO}
+      N8N_ALLOWED_FILESYSTEM_PATHS: ${N8N_ALLOWED_FILESYSTEM_PATHS}
+      
+      # Timezone
+      GENERIC_TIMEZONE: ${GENERIC_TIMEZONE}
+    
+    volumes:
+      - ./data/n8n:/home/node/.n8n
+      - n8n-workflows:/home/node/.n8n/workflows
+    
+    networks:
+      - n8n-network
+    
+    ports:
+      - "${N8N_PORT}:5678"
+    
+    security_opt:
+      - no-new-privileges:true
+    
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
+
+  # =============================================================================
+  # n8n Worker - Queue processor (scales independently)
+  # =============================================================================
+  n8n-worker:
+    image: n8nio/n8n:latest
+    container_name: n8n-worker
+    restart: unless-stopped
+    
+    depends_on:
+      postgres:
+        condition: service_started
+      redis:
+        condition: service_started
+
+    healthcheck:
+      test: ["CMD", "echo", "worker-running"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    
+    environment:
+      # n8n Configuration - Worker mode
+      N8N_MODE: "queue"
+      N8N_HOST: ${N8N_HOST}
+      N8N_PORT: 5678
+      N8N_PROTOCOL: ${N8N_PROTOCOL}
+      
+      # Disable basic auth for workers (internal communication)
+      N8N_BASIC_AUTH_ACTIVE: "false"
+      
+      # Database Configuration (PostgreSQL)
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: ${POSTGRES_DB}
+      DB_POSTGRESDB_USER: ${POSTGRES_USER}
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD}
+      
+      # Queue Configuration (Redis)
+      QUEUE_BULL_REDIS_HOST: redis
+      QUEUE_BULL_REDIS_PORT: 6379
+      QUEUE_BULL_REDIS_PASSWORD: ${REDIS_PASSWORD}
+      QUEUE_BULL_REDIS_DB: 0
+      QUEUE_HEALTH_CHECK_ACTIVE: "true"
+      
+      # Worker specific settings
+      N8N_LOG_LEVEL: ${N8N_LOG_LEVEL}
+      N8N_LOG_OUTPUT: console
+      
+      # Worker processes - run in separate process
+      EXECUTIONS_PROCESS: "worker"
+      EXECUTIONS_TIMEOUT: 600
+      EXECUTIONS_TIMEOUT_MAX: 1800
+      EXECUTIONS_DATA_SAVE_ON_ERROR: all
+      EXECUTIONS_DATA_SAVE_ON_SUCCESS: all
+      
+      # Security
+      N8N_RESTRICT_FILE_ACCESS_TO: ${N8N_RESTRICT_FILE_ACCESS_TO}
+      N8N_ALLOWED_FILESYSTEM_PATHS: ${N8N_ALLOWED_FILESYSTEM_PATHS}
+      
+      # Timezone
+      GENERIC_TIMEZONE: ${GENERIC_TIMEZONE}
+    
+    volumes:
+      - ./data/n8n:/home/node/.n8n
+      - n8n-workflows:/home/node/.n8n/workflows
+    
+    networks:
+      - n8n-network
+    
+    # Workers don't expose ports - internal only
+    
+    security_opt:
+      - no-new-privileges:true
+    
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 1G
+      replicas: 1  # Increase for more workers: docker-compose up -d --scale n8n-worker=3
+
+# =============================================================================
+# Networks
+# =============================================================================
+networks:
+  n8n-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+# =============================================================================
+# Volumes
+# =============================================================================
+volumes:
+  n8n-workflows:
+    driver: local
