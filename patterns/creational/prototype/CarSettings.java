@@ -1,4 +1,4 @@
-package patterns.prototype;
+package patterns.creational.prototype;
 
 public class CarSettings implements Cloneable {
 

@@ -1,4 +1,4 @@
-package patterns.abstractFactory;
+package patterns.creational.abstractFactory;
 
 public class CarFactory {
 

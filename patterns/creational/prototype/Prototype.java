@@ -1,4 +1,4 @@
-package patterns.prototype;
+package patterns.creational.prototype;
 
 public interface Prototype extends Cloneable {
 
