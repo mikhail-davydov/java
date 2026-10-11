@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: monitor-demo
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+      base-path: /actuator
+    enabled-by-default: true
+
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+#    metrics:
+#      enabled: true
+
+logging:
+  level:
+    com.example.monitordemo: DEBUG
+    org.springframework.web: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} : %level : %logger{36} : %msg%n"

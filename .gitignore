@@ -43,26 +43,8 @@ build/
 /docker/**/nodejs/package-lock.json
 /docker/**/nodejs/node_modules/
 
-### postgres
-/docker/**/postgres/data/
-
-### mongodb
-/docker/**/mongodb/data/
-
-### ollama
-/docker/**/ollama/
-
-### jupyter
-/docker/**/jupyter/
-
-### qdrant
-/docker/**/qdrant/
-
-### n8n
-/docker/**/n8n
-
-### n8n-stack
-/docker/n8n-stack/data/
+### docker data
+/docker/**/data/
 
 ### Custom Private settings ###
 .private/

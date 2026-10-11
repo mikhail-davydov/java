@@ -4,7 +4,7 @@ services:
     container_name: ollama
     image: alpine/ollama:latest
     volumes:
-      - ./ollama:/root/.ollama
+      - ./ollama/data:/root/.ollama
     ports:
       - "11434:11434"
     networks:
@@ -15,7 +15,7 @@ services:
     image: node:lts
     working_dir: /app
     volumes:
-      - ./nodejs:/app
+      - ./nodejs/data:/app
     command: sh -c "npm init -y && npm install && node index.js"
     ports:
       - "3000:3000"
@@ -144,8 +144,8 @@ services:
     ports:
       - "18888:8888"
     volumes:
-      - ./jupyter/datasets:/datasets
-      - ./jupyter/notebooks:/home/jovyan/work
+      - ./jupyter/data/datasets:/datasets
+      - ./jupyter/data/notebooks:/home/jovyan/work
     command: ["jupyter", "notebook", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''", "--ip=0.0.0.0", "--no-browser"]
     networks:
       - local
