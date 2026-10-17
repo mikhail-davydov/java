@@ -121,16 +121,7 @@ public class OrderController {
         return response;
     }
 
-    public static class Statistics {
-        private final long ordersCount;
-
-        public Statistics(long ordersCount) {
-            this.ordersCount = ordersCount;
-        }
-
-        public long getOrdersCount() {
-            return ordersCount;
-        }
+    public record Statistics(long ordersCount) {
     }
 
 }

@@ -19,6 +19,7 @@ out/
 *.iws
 *.iml
 *.ipr
+*.env.json
 
 ### NetBeans ###
 /nbproject/private/
@@ -49,3 +50,4 @@ build/
 ### Custom Private settings ###
 .private/
 /**/.env
+/amplicode.xml
