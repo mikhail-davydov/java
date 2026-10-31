@@ -1,6 +1,6 @@
 println("Initialization: settings.gradle.kts")
 
-rootProject.name = "gradle"
+rootProject.name = "gradle-app"
 
 include("app")
 include("greeter")
