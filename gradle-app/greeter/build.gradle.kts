@@ -1,11 +1,14 @@
-println("Confgiration: greeter")
+println("Configuration: greeter")
 
 plugins {
-    id("java-library")
+    `java-library`
+    `maven-publish`
 }
 
 group = "org.example"
 version = "1.0-SNAPSHOT"
+
+val polite = sourceSets.create("polite")
 
 repositories {
     mavenCentral()

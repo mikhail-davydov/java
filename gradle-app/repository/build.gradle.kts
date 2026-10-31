@@ -1,4 +1,4 @@
-println("Confgiration: respository")
+println("Configuration: respository")
 
 plugins {
     id("java")

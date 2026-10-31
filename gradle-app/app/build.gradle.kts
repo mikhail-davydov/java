@@ -1,4 +1,4 @@
-println("Confgiration: app")
+println("Configuration: app")
 
 plugins {
     application
@@ -31,5 +31,18 @@ tasks.register("homework") {
     dependsOn(":greeter:homework")
     doFirst {
         println("app")
+    }
+}
+
+tasks.register("configurations") {
+    doLast {
+        configurations.forEach {
+            println("configuration: ${it.name}\n")
+            val attributes = it.attributes
+            attributes.keySet().forEach {
+                println("$it : ${attributes.getAttribute(it)}")
+            }
+            println()
+        }
     }
 }
