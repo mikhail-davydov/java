@@ -1,5 +1,7 @@
+println("Confgiration: app")
+
 plugins {
-    id("java-library")
+    application
 }
 
 group = "org.example"
@@ -19,4 +21,15 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+application {
+    mainClass = "org.example.app.Main"
+}
+
+tasks.register("homework") {
+    dependsOn(":greeter:homework")
+    doFirst {
+        println("app")
+    }
 }

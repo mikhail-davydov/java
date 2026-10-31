@@ -1,3 +1,5 @@
+println("Confgiration: respository")
+
 plugins {
     id("java")
 }
@@ -17,4 +19,10 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.register("homework") {
+    doFirst {
+        println("repository")
+    }
 }

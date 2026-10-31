@@ -1,3 +1,5 @@
+println("Confgiration: greeter")
+
 plugins {
     id("java-library")
 }
@@ -19,4 +21,11 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.register("homework") {
+    dependsOn(":repository:homework")
+    doFirst {
+        println("greeter")
+    }
 }
