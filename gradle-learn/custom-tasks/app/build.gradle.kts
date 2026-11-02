@@ -3,13 +3,12 @@ plugins {
 }
 
 dependencies {
-    implementation("org.apache.commons:commons-text")
     implementation(project(":utilities"))
 }
 
 application {
-    // Define the main class for the application.
     mainClass = "org.example.app.App"
+    version = "1.0.0-SNAPSHOT"
 }
 
 
@@ -45,4 +44,6 @@ tasks.register<PrintResultTask>("printResult") {
         it.unionOutputFile
     }
 }
+
+layout.buildDirectory = project.file("build") // default
 

@@ -1,10 +1,10 @@
 import org.gradle.api.DefaultTask
+import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
-import java.io.File
 
 @CacheableTask
 abstract class SquareTask : DefaultTask() {
@@ -13,18 +13,18 @@ abstract class SquareTask : DefaultTask() {
     abstract val number: Property<Int>
 
     @get:OutputFile
-    abstract val outputFile: Property<File>
+    abstract val outputFile: RegularFileProperty
 
     init {
         logger.lifecycle("Init: $this")
         number.convention(0)
-        outputFile.convention(project.file("build/squared.txt"))
+        outputFile.convention(project.layout.buildDirectory.file("squared.txt"))
     }
 
     @TaskAction
     fun square() {
         logger.lifecycle("Action: $this")
         val current: Int = number.get()
-        outputFile.get().writeText("${current * current}")
+        outputFile.get().asFile.writeText("${current * current}")
     }
 }
