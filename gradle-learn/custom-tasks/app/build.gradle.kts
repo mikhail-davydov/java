@@ -11,6 +11,7 @@ application {
     version = "1.0.0-SNAPSHOT"
 }
 
+layout.buildDirectory = project.file("build") // default
 
 val squareTaskProvider = tasks.register<SquareTask>("square") {
     logger.lifecycle("Configuration: $this")
@@ -45,5 +46,31 @@ tasks.register<PrintResultTask>("printResult") {
     }
 }
 
-layout.buildDirectory = project.file("build") // default
+tasks.register("show-logs") {
+    description = "Print show logs setting."
 
+    val showLogs = providers.gradleProperty("show.logs")
+        .map { it.toBoolean() }
+        .orElse(false)
+
+    doLast {
+        if (showLogs.get()) {
+            logger.lifecycle("Show logs.")
+        }
+    }
+}
+
+tasks.register<CountCodeLinesTask>("countCodeLines") {
+    description = "Runs the count code lines task."
+
+    sourceFiles.from(rootProject.layout.projectDirectory)
+    sourceFiles.include(listOf("**/*.java", "**/*.kt", "**/*.kts"))
+    sourceFiles.exclude(
+        "**/build/**",
+        "**/build-logic/**"
+    )
+}
+
+tasks.named("check") {
+    dependsOn("countCodeLines")
+}
