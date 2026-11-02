@@ -7,21 +7,24 @@ import org.gradle.api.tasks.TaskAction
 import java.io.File
 
 @CacheableTask
-abstract class SquareTask: DefaultTask() {
+abstract class SquareTask : DefaultTask() {
 
     @get:Input
     abstract val number: Property<Int>
 
-    @OutputFile
-    val outputFile: File = project.file("build/square.txt")
+    @get:OutputFile
+    abstract val outputFile: Property<File>
 
     init {
-        number.set(0)
+        logger.lifecycle("Init: $this")
+        number.convention(0)
+        outputFile.convention(project.file("build/squared.txt"))
     }
 
     @TaskAction
     fun square() {
+        logger.lifecycle("Action: $this")
         val current: Int = number.get()
-        outputFile.writeText("${current * current}")
+        outputFile.get().writeText("${current * current}")
     }
 }
