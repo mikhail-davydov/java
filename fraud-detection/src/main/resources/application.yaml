@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: fraud-detection
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/transactions_db
+    username: debezium
+    password: dbz
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  kafka:
+    bootstrap-servers: localhost:9093
+    streams:
+      application-id: fraud-detection-streams
+#    properties:
+#      security:
+#        protocol: SSL
+#    ssl:
+#      trust-store-location: file:./fraud-detection/kafka.jks
+#      trust-store-password: changeit
